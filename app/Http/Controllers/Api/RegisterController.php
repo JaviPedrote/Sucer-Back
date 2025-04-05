@@ -24,7 +24,6 @@ class RegisterController extends Controller
             'password' => bcrypt($request->password),
         ]);
 
-
         // Return a success response
         return response($user , 200);
     }
