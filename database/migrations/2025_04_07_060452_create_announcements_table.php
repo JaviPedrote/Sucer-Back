@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->longText('content');
+            $table->string('slug')->unique();
             $table->boolean('urgent')->default(false);
             $table->timestamps();
 

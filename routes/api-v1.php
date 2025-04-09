@@ -2,8 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\AnuncioController;
 use App\Http\Controllers\Api\RegisterController;
+use App\Http\Controllers\Api\CategoryController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -11,5 +11,17 @@ Route::get('/user', function (Request $request) {
 
 Route::post('register', [RegisterController::class, 'store'])->name('api.v1.register');
 
+//Routes Categpry
+Route::get('categories', [CategoryController::class, 'index'])->name('api.v1.categories.index');
+Route::post('categories', [CategoryController::class, 'store'])->name('api.v1.categories.store');
+Route::get('categories/{category}', [CategoryController::class, 'show'])->name('api.v1.categories.show');
+Route::put('categories/{category}', [CategoryController::class, 'update'])->name('api.v1.categories.update');
+Route::delete('categories/{category}', [CategoryController::class, 'destroy'])->name('api.v1.categories.destroy');
 
-Route::get('/anuncios', [AnuncioController::class, 'index']);
+//Routes Announcement
+
+
+//Routes User
+
+
+//Routes Role

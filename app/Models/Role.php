@@ -12,4 +12,12 @@ class Role extends Model
     const ADMIN = 1;
     const TUTOR = 2;
     const USER = 3;
+
+ // Relacion muchos a uno
+ // Un rol puede tener muchos usuarios
+    public function users()
+    {
+        return $this->hasMany(User::class);
+    }
+
 }
