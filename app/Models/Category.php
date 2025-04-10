@@ -9,6 +9,10 @@ class Category extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'name',
+        'slug',
+    ];
     // Relacion uno a muchos
     // Una categoria puede tener muchos anuncios
     public function announcements()
