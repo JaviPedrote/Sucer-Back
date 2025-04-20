@@ -17,22 +17,28 @@ class AnnouncementApiMiddleware
     public function handle(Request $request, Closure $next): Response
     {
 
-        if(Auth::check()){
-            return $next($request);
-        }
+        // Check if the user is authenticated
 
-        if($request->route()->named('api.v1.announcements.index')){
-            return $next($request);
-        }
+        $tokenIsValid = Auth::guard('api')->check();
 
-        if($request->route()->named('api.v1.announcements.show')){
+        if(!$tokenIsValid){
+
+            if($request->route()->named('api.v1.announcements.index')){
+                return $next($request);
+            }
+
+            if($request->route()->named('api.v1.announcements.show')){
+                return $next($request);
+            }
+
             return response()->json([
-                'message' => 'ruta no permitida',
-            ],);
+                'message' => 'Unauthenticated'
+            ], 401);
+            
+        }else{
+            return $next($request);
         }
 
-        return response()->json([
-            'message' => 'ruta no permitida',
-        ]);
+
     }
 }

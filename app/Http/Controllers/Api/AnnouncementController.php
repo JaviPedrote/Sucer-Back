@@ -37,7 +37,7 @@ class AnnouncementController extends Controller
             'category_id' => 'required|exists:categories,id',
         ]);
 
-        $user = Auth::user();
+        $user = Auth::guard('api')->user();
         $data['user_id'] = $user->id;
 
         $announcements = Announcement::create($data);
