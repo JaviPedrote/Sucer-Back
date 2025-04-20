@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\CategoryResource;
 use App\Models\Category;
 use Illuminate\Http\Request;
 
@@ -13,8 +14,10 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::all();
-        return $categories;
+        $categories = Category::included()->fitter()
+         ->sort()
+        ->getOrPaginate();
+        return CategoryResource::collection($categories);
     }
 
     /**
@@ -29,20 +32,19 @@ class CategoryController extends Controller
         ]);
 
         $category = Category::create($request->all());
-        return $category;
+        return CategoryResource::make($category);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Category $category)
+    public function show($id)
     {
-        return $category;
+        $category = Category::included()->findOrFail($id);
+        return CategoryResource::make($category);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+
     public function update(Request $request, Category $category)
     {
         //!Regla de validacion
@@ -52,7 +54,7 @@ class CategoryController extends Controller
         ]);
 
         $category->update($request->all());
-        return $category;
+        return CategoryResource::make($category);
     }
 
     /**
@@ -60,6 +62,8 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        //
+        $category->delete();
+        return CategoryResource::make($category);
+
     }
 }

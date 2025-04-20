@@ -4,10 +4,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\RegisterController;
 use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\AnnouncementController;
+use App\Http\Middleware\AnnouncementApiMiddleware;
+use App\Models\Announcement;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
-})->middleware('auth:sanctum');
+})->middleware('auth:api');
 
 Route::post('register', [RegisterController::class, 'store'])->name('api.v1.register');
 
@@ -22,6 +25,7 @@ Route::post('register', [RegisterController::class, 'store'])->name('api.v1.regi
 Route::apiResource('categories', CategoryController::class)->names('api.v1.categories');
 
 //Routes Announcement
+Route::apiResource('announcements', AnnouncementController::class)->names('api.v1.announcements')->middleware([AnnouncementApiMiddleware::class]);
 
 
 //Routes User
