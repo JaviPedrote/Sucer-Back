@@ -6,11 +6,15 @@ use App\Http\Controllers\Api\RegisterController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\AnnouncementController;
 use App\Http\Middleware\AnnouncementApiMiddleware;
+use App\Http\Controllers\Api\Auth\LoginController;
 use App\Models\Announcement;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:api');
+
+//Routes Auth
+Route::post('login', [LoginController::class, 'store'])->name('api.v1.login');
 
 Route::post('register', [RegisterController::class, 'store'])->name('api.v1.register');
 
@@ -26,6 +30,8 @@ Route::apiResource('categories', CategoryController::class)->names('api.v1.categ
 
 //Routes Announcement
 Route::apiResource('announcements', AnnouncementController::class)->names('api.v1.announcements')->middleware([AnnouncementApiMiddleware::class]);
+
+
 
 
 //Routes User
