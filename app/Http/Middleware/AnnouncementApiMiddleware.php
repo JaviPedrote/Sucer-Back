@@ -32,9 +32,9 @@ class AnnouncementApiMiddleware
             }
 
             return response()->json([
-                'message' => 'Unauthenticated'
+                'message' => 'Unauthenticated, pasando por announcementApiMiuddleware',
             ], 401);
-            
+
         }else{
             return $next($request);
         }
