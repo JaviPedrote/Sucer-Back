@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Validation\ValidationException;
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 
@@ -18,6 +19,13 @@ class AuthController extends Controller
             'password' => ['required', 'string'],
         ]);
 
+        $user = User::where('email', $request->email)->first();
+        if (!$user) {
+            throw ValidationException::withMessages([
+                'email' => ['El usuario no existe.'],
+            ]);
+        }
+
         // 2) Prepara TODO lo que Passport necesita
         $payload = [
             'grant_type'    => 'password',
@@ -28,10 +36,20 @@ class AuthController extends Controller
             'scope'         => '',
         ];
 
-        // 3) Crea la sub-petición interna *con el payload como 3er parámetro*
-        $tokenRequest  = Request::create('/oauth/token', 'POST', $payload);
+          // 3) Crea la sub-petición interna
+    $tokenRequest = Request::create('/oauth/token', 'POST', $payload);
 
-        // 4) Envíala por el kernel y devuelve la respuesta tal cual
-        return app()->handle($tokenRequest);
+        // 4) Ejecuta la sub-petición y guarda la respuesta
+    $response = app()->handle($tokenRequest);
+
+    // 5) Decodifica la respuesta de Passport
+    $data = json_decode((string) $response->getContent(), true);
+
+    // 6) Añade el usuario a los datos
+    $data['user'] = $user;
+
+    // 7) Devuelve todo en JSON con el mismo código de estado
+    return response()->json($data, $response->getStatusCode());
+
     }
 }
