@@ -15,7 +15,7 @@ Route::get('/user', function (Request $request) {
 
 //Routes Auth
 Route::prefix('')->group(function () {
-    Route::post('/login', [\App\Http\Controllers\Api\Auth\AuthController::class, 'login'])  ->middleware('throttle:10,5'); //10 intentos cada 5 minutos
+    Route::post('/login', [\App\Http\Controllers\Api\Auth\AuthController::class, 'login']);
 });
 
 Route::post('register', [RegisterController::class, 'store'])->name('api.v1.register');
