@@ -15,6 +15,7 @@ class RegisterController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
+            'role_id' => 'required|exists:roles,id',
         ]);
 
         // Create a new user
@@ -22,6 +23,7 @@ class RegisterController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => bcrypt($request->password),
+            'role_id' => $request->role_id,
         ]);
 
         // Return a success response

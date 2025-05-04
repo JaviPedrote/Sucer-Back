@@ -2,7 +2,6 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\RegisterController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\AnnouncementController;
 use App\Http\Controllers\Api\Auth\AuthController;
@@ -37,6 +36,9 @@ Route::middleware('auth:api')->group(function () {
 
 
 //Routes User
-
+Route::get('users', [\App\Http\Controllers\Api\UserController::class, 'index'])->middleware('auth:api');
+Route::get('users/{user}', [\App\Http\Controllers\Api\UserController::class, 'show'])->middleware('auth:api');
+Route::put('users/{user}', [\App\Http\Controllers\Api\UserController::class, 'update'])->middleware('auth:api');
+Route::delete('users/{user}', [\App\Http\Controllers\Api\UserController::class, 'destroy'])->middleware('auth:api');
 
 //Routes Role

@@ -67,7 +67,8 @@ class AuthController extends Controller
         $request->validate([
             'name'     => 'required|string',
             'email'    => 'required|email|unique:users',
-            'password' => 'required|min:8'
+            'password' => 'required|min:8',
+            'role_id'  => 'required|exists:roles,id',
         ]);
 
         // Crear el nuevo usuario
@@ -76,7 +77,7 @@ class AuthController extends Controller
             'email'    => $request->email,
             'password' => Hash::make($request->password), // Encriptar contraseña
             'slug' => 'required|max:255|unique:user,slug,' . $request->id,
-            'role_id'  => 3, // Asignar rol por defecto (ejemplo: rol de usuario)
+            'role_id'  => $request->role_id,
         ]);
 
         // Revisar si el slug ya existe
