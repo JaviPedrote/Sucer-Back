@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -15,9 +16,20 @@ class UserController extends Controller
     public function index()
     {
 
+        $user = Auth::guard('api')->user();
+
 
         // Return the users as a JSON response
-        $users = User::with('role')->get();
+        $users = User::with('role')
+            // Si NO es admin (rol distinto a 1), filtramos por user_id
+            ->when(
+                $user->role_id !== 1,
+                fn($query) => $query->where('id', $user->id)
+            )
+            ->included()
+            ->fitter()
+            ->sort()
+            ->getOrPaginate();
         return response()->json($users);
     }
 
@@ -54,11 +66,7 @@ class UserController extends Controller
             'role_id' => $request->role_id,
         ]);
 
-        // If a password is provided, hash it and update the user
-        if ($request->filled('password')) {
-            $user->password = bcrypt($request->password);
-            $user->save();
-        }
+
 
 
         return response()->json($user);
