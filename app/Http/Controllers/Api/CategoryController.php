@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\CategoryResource;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+
 
 class CategoryController extends Controller
 {
@@ -28,11 +30,25 @@ class CategoryController extends Controller
         //!Regla de validacion
         $request->validate([
             'name' => 'required|max:255',
-            'slug' => 'required|max:255|unique:categories',
+            'slug'=> 'nullable|alpha_dash|unique:categories,slug',
         ]);
 
-        $category = Category::create($request->all());
-        return CategoryResource::make($category);
+        // 2) Obtener usuario
+        $slug = $request->input('slug', Str::slug($request->name));
+
+         // 4) Asegurarnos de que el slug sea único
+    if (Category::where('slug', $slug)->exists()) {
+        $slug .= '-' . time();
+    }
+
+        $category = Category::create([
+            'name' => $request->name,
+            'slug' => $slug,
+        ]);
+        return response()->json([
+            'data' => CategoryResource::make($category),
+            'message' => 'Category created successfully',
+        ], 201);
     }
 
     /**
@@ -50,11 +66,13 @@ class CategoryController extends Controller
         //!Regla de validacion
          $request->validate([
             'name' => 'required|max:255',
-            'slug' => 'required|max:255|unique:categories,slug,' . $category->id,
         ]);
 
         $category->update($request->all());
-        return CategoryResource::make($category);
+        return response()->json([
+            'data' => CategoryResource::make($category),
+            'success' => true,
+        ], 200);
     }
 
     /**
