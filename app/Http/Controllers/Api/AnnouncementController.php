@@ -27,6 +27,10 @@ class AnnouncementController extends Controller
                 $user->role_id !== Role::ADMIN,
                 fn($query) => $query->where('user_id', $user->id)
             )
+            // Si es admin, mostramos todos los anuncios
+
+            // Si es un usuario normal, mostramos solo los anuncios que le pertenecen
+
             ->included()
             ->fitter()
             ->sort()

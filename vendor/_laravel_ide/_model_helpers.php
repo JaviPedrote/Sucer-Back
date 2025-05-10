@@ -955,10 +955,14 @@ namespace App\Models {
      * @property \Illuminate\Support\Carbon|null $email_verified_at
      * @property string $email
      * @property string $name
+     * @property int|null $tutor_id
      * @property int $id
      * @property-read \App\Models\Role $role
      * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Announcement> $announcements
      * @property-read int|null $announcements_count
+     * @property-read \App\Models\User $tutor
+     * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\User> $alumnos
+     * @property-read int|null $alumnos_count
      * @property-read \Illuminate\Database\Eloquent\Collection<int, \Laravel\Passport\Client> $clients
      * @property-read int|null $clients_count
      * @property-read \Illuminate\Database\Eloquent\Collection<int, \Laravel\Passport\Token> $tokens
@@ -966,6 +970,7 @@ namespace App\Models {
      * @property-read \Illuminate\Database\Eloquent\Collection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
      * @property-read int|null $notifications_count
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereTutorId($value)
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereName($value)
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereEmail($value)
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereEmailVerifiedAt($value)

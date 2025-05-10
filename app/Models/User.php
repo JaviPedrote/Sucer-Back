@@ -24,6 +24,7 @@ class User extends Authenticatable
         'email',
         'password',
         'role_id',
+        'tutor_id',
         'slug',
     ];
 
@@ -62,5 +63,15 @@ class User extends Authenticatable
     {
         return $this->hasMany(Announcement::class);
     }
+
+    public function tutor()
+{
+    return $this->belongsTo(User::class, 'tutor_id');
+}
+
+public function alumnos()
+{
+    return $this->hasMany(User::class, 'tutor_id');
+}
 
 }

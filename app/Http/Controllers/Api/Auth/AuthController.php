@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Validation\ValidationException;
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 
@@ -61,36 +62,53 @@ class AuthController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
 
-    public function register(Request $request)
-    {
-        // Validar datos de entrada
-        $request->validate([
-            'name'     => 'required|string',
-            'email'    => 'required|email|unique:users',
-            'password' => 'required|min:8',
-            'role_id'  => 'required|exists:roles,id',
-        ]);
+   public function register(Request $request)
+{
+    // 1) Validar
+    $data = $request->validate([
+        'name'                  => 'required|string|max:255',
+        'email'                 => 'required|email|unique:users',
+        'password'              => 'required|min:8',
+        'role_id'               => 'required|exists:roles,id',
+        'slug'                  => 'nullable|max:255|unique:users,slug',
+        'tutor_id'              => ['nullable','exists:users,id'],
+    ]);
 
-        // Crear el nuevo usuario
-        $user = User::create([
-            'name'     => $request->name,
-            'email'    => $request->email,
-            'password' => Hash::make($request->password), // Encriptar contraseña
-            'slug' => 'required|max:255|unique:user,slug,' . $request->id,
-            'role_id'  => $request->role_id,
-        ]);
-
-        // Revisar si el slug ya existe
-        if (User::where('slug', $user->slug)->exists()) {
-            $user->slug = $user->name . '-' . $user->id;
-            $user->save();
-        }
-
-        return response()->json([
-            'message' => 'Usuario registrado con éxito',
-            'user'    => $user,
-        ], 201);
+    // 2) Tutor según rol
+    if ($data['role_id'] == 2) {
+        $admin = User::where('role_id',1)->first();
+        $data['tutor_id'] = $admin? $admin->id : null;
+    } elseif ($data['role_id'] != 3) {
+        $data['tutor_id'] = null;      // solo alumnos pueden venir con tutor_id
     }
+
+    // 1) Genera un slug candidato
+    $slugBase = Str::slug($data['slug'] ?? $data['name']);
+    $slug     = $slugBase;
+
+// 2) Garantiza que sea único antes de insertar
+$contador = 1;
+while (User::where('slug', $slug)->exists()) {
+    $slug = $slugBase.'-'.$contador++;
+}
+
+    // 4) Crear usuario sin slug todavía (evita colisión hasta tener el ID)
+    $user = User::create([
+    'name'      => $data['name'],
+    'email'     => $data['email'],
+    'password'  => Hash::make($data['password']),
+    'role_id'   => $data['role_id'],
+    'tutor_id'  => $data['tutor_id'],
+    'slug'      => $slug,
+]);
+
+
+    return response()->json([
+        'message' => 'Usuario registrado con éxito',
+        'user'    => $user,
+    ], 201);
+}
+
 
     public function logout(Request $request)
     {
