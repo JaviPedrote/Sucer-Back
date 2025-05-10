@@ -15,29 +15,28 @@ use Illuminate\Support\Str;
 class AnnouncementController extends Controller
 {
 
-    public function index()
-    {
-        $user = Auth::guard('api')->user();
-
-
-        $announcements = Announcement::with('category')
-
-            // Si NO es admin (rol distinto a 1), filtramos por user_id
-            ->when(
-                $user->role_id !== Role::ADMIN,
-                fn($query) => $query->where('user_id', $user->id)
-            )
-            // Si es admin, mostramos todos los anuncios
-
-            // Si es un usuario normal, mostramos solo los anuncios que le pertenecen
-
-            ->included()
-            ->fitter()
-            ->sort()
-            ->getOrPaginate();
-
-        return AnnouncementResource::collection($announcements);
+public function index()
+{
+    $me = Auth::guard('api')->user();
+    $query = Announcement::with('author','category');
+    
+    if ($me->role_id === 3) {
+        // Alumno: sólo su tutor + admin
+        $ids = array_filter([$me->tutor_id, 1]);
+        $query->whereIn('user_id', $ids);
+    } elseif ($me->role_id === 2) {
+        // Tutor: sólo él + admin
+        $ids = [$me->id, 1];
+        $query->whereIn('user_id', $ids);
     }
+    // Si es admin (role_id === 1), no añadimos WHERE y cargamos TODOS
+
+    $announcements = $query
+        ->orderByDesc('created_at')
+        ->get();
+
+    return  AnnouncementResource::collection($announcements);
+}
 
     /**
      * Store a newly created resource in storage.

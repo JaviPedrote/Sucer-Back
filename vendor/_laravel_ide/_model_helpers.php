@@ -5,8 +5,8 @@ namespace App\Models {
     /**
      * App\Models\Announcement
      *
-     * @property int $category_id
-     * @property int $user_id
+     * @property int|null $category_id
+     * @property int|null $user_id
      * @property \Illuminate\Support\Carbon|null $updated_at
      * @property \Illuminate\Support\Carbon|null $created_at
      * @property boolean $urgent
@@ -16,6 +16,7 @@ namespace App\Models {
      * @property int $id
      * @property-read \App\Models\Category $category
      * @property-read \App\Models\User $user
+     * @property-read \App\Models\User $author
      * @method static \Illuminate\Database\Eloquent\Builder<Announcement>|Announcement whereId($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Announcement>|Announcement whereTitle($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Announcement>|Announcement whereContent($value)
@@ -946,6 +947,7 @@ namespace App\Models {
     /**
      * App\Models\User
      *
+     * @property \Illuminate\Support\Carbon|null $deleted_at
      * @property \Illuminate\Support\Carbon|null $updated_at
      * @property \Illuminate\Support\Carbon|null $created_at
      * @property string|null $remember_token
@@ -980,6 +982,7 @@ namespace App\Models {
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereRememberToken($value)
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereUpdatedAt($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<User>|User whereDeletedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User included()
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User fitter()
      * @method static \Illuminate\Database\Eloquent\Builder<User>|User sort()

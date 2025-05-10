@@ -26,10 +26,12 @@ class UserController extends Controller
                 $user->role_id !== 1,
                 fn($query) => $query->where('id', $user->id)
             )
+            ->orderBy('role_id', 'asc')
             ->included()
             ->fitter()
             ->sort()
             ->getOrPaginate();
+
         return response()->json($users);
     }
 
@@ -64,6 +66,7 @@ class UserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'role_id' => $request->role_id,
+            'tutor_id' => $request->tutor_id,
         ]);
 
 
