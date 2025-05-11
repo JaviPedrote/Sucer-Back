@@ -8,10 +8,22 @@ use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Middleware\AnnouncementApiMiddleware;
 use App\Http\Controllers\Api\Auth\LoginController;
 use App\Models\Announcement;
+use Illuminate\Support\Facades\Artisan;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:api');
+
+Route::get('/run-migrations', function () {
+    
+    if (env('APP_ENV') !== 'production') {
+        return response('Bloqueado fuera de producción.', 403);
+    }
+
+    Artisan::call('migrate', ['--force' => true]);
+
+    return 'Migraciones ejecutadas correctamente.';
+});
 
 //Routes Auth
 
