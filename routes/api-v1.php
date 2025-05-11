@@ -14,17 +14,6 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:api');
 
-Route::get('/run-migrations', function () {
-    
-    if (env('APP_ENV') !== 'production') {
-        return response('Bloqueado fuera de producción.', 403);
-    }
-
-    Artisan::call('migrate', ['--force' => true]);
-
-    return 'Migraciones ejecutadas correctamente.';
-});
-
 //Routes Auth
 
 Route::post('login', [AuthController::class, 'login']);
