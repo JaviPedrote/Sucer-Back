@@ -15,14 +15,28 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+    /* ───── ALIAS ───── */
+    $middleware->alias([
+        'announcement.api' => AnnouncementApiMiddleware::class,
+    ]);
 
-        /* ───── ALIAS ───── */
-        $middleware->alias([
-            'announcement.api' => AnnouncementApiMiddleware::class,
-        ]);
+    /* ───── GLOBAL ───── */
+    // Opción A: sólo añadir HandleCors al principio
+    $middleware->prepend(\Illuminate\Http\Middleware\HandleCors::class);
 
-        /* ───── GLOBAL ───── */
-    })
+    // Opción B: redefinir todo el stack global (incluye CORS)
+    /*
+    $middleware->use([
+        \Illuminate\Foundation\Http\Middleware\InvokeDeferredCallbacks::class,
+        \Illuminate\Http\Middleware\TrustProxies::class,
+        \Illuminate\Http\Middleware\HandleCors::class,
+        \Illuminate\Foundation\Http\Middleware\PreventRequestsDuringMaintenance::class,
+        \Illuminate\Http\Middleware\ValidatePostSize::class,
+        \Illuminate\Foundation\Http\Middleware\TrimStrings::class,
+        \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
+    ]);
+    */
+})
     ->withExceptions(function (Exceptions $exceptions) {
         //
     })->create();
