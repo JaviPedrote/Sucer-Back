@@ -33,7 +33,10 @@ class DatabaseSeeder extends Seeder
         ]);
         Category::factory(4)->create();
 
+        $this->call([
+            RolesTableSeeder::class,
+        ]);
         $this->call([UserSeeder::class]);
-        $this->call([AnnouncementSeeder::class]);
+        // $this->call([AnnouncementSeeder::class]);
     }
 }

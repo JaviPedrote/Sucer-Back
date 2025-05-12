@@ -43,3 +43,8 @@ Route::put('users/{user}', [\App\Http\Controllers\Api\UserController::class, 'up
 Route::delete('users/{user}', [\App\Http\Controllers\Api\UserController::class, 'destroy'])->middleware('auth:api');
 
 //Routes Role
+Route::get('roles', [\App\Http\Controllers\Api\RoleController::class, 'index'])->middleware('auth:api');
+Route::get('roles/{role}', [\App\Http\Controllers\Api\RoleController::class, 'show'])->middleware('auth:api');
+Route::put('roles/{role}', [\App\Http\Controllers\Api\RoleController::class, 'update'])->middleware('auth:api');
+Route::delete('roles/{role}', [\App\Http\Controllers\Api\RoleController::class, 'destroy'])->middleware('auth:api');
+Route::post('roles', [\App\Http\Controllers\Api\RoleController::class, 'store'])->middleware('auth:api');
