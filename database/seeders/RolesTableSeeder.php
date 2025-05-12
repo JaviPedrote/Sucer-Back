@@ -10,21 +10,19 @@ class RolesTableSeeder extends Seeder
 {
     public function run(): void
     {
-        // 1) Desactivar temporalmente comprobación de FKs
+        // 1) Vaciamos la tabla sin chequear FKs
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        // 2) Vaciar la tabla roles
         DB::table('roles')->truncate();
-        // 3) Volver a activar FKs
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
-        // 4) Definir los roles fijos
+        // 2) Definimos los roles con nombres cortos
         $roles = [
-            ['id' => Role::ADMIN, 'name' => 'Administrador', 'slug' => 'admin'],
-            ['id' => Role::TUTOR,     'name' => 'Tutor',         'slug' => 'tutor'],
-            ['id' => Role::USER,      'name' => 'Usuario',       'slug' => 'user'],
+            ['id'   => Role::ADMIN, 'name' => 'Admin',   'slug' => 'admin'],
+            ['id'   => Role::TUTOR, 'name' => 'Tutor',   'slug' => 'tutor'],
+            ['id'   => Role::USER,  'name' => 'Usuario', 'slug' => 'user'],
         ];
 
-        // 5) Insertarlos
+        // 3) Creamos los roles
         foreach ($roles as $role) {
             Role::create($role);
         }
