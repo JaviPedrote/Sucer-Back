@@ -10,6 +10,20 @@ use App\Http\Controllers\Api\Auth\LoginController;
 use App\Models\Announcement;
 use Illuminate\Support\Facades\Artisan;
 
+Route::get('/run-migrations', function () {
+    // ✅ Seguridad básica: ejecuta solo si estás en producción
+    if (env('APP_ENV') !== 'production') {
+        return response('Acceso denegado.', 403);
+    }
+
+    try {
+        Artisan::call('migrate', ['--force' => true]);
+        return 'Migraciones ejecutadas correctamente.';
+    } catch (\Throwable $e) {
+        return response($e->getMessage(), 500);
+    }
+});
+
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:api');
