@@ -11,21 +11,23 @@ return new class extends Migration
      */
    public function up()
 {
-   Schema::table('announcements', function (Blueprint $table) {
-    // 1) Drop de la FK de user_id (ésta sí existe)
+ Schema::table('announcements', function (Blueprint $table) {
+    // 1) Eliminar foreign key existente en user_id
     $table->dropForeign('announcements_user_id_foreign');
 
-    // 2) Hacer nullable la columna
-    $table->unsignedBigInteger('user_id')->nullable()->change();
+    // 2) Eliminar foreign key existente en category_id (¡esto es lo que faltaba!)
+    $table->dropForeign('announcements_category_id_foreign');
 
-    // 3) Volver a crear la FK con SET NULL
+    // 3) Hacer nullable user_id y category_id
+    $table->unsignedBigInteger('user_id')->nullable()->change();
+    $table->unsignedBigInteger('category_id')->nullable()->change();
+
+    // 4) Volver a crear la foreign key de user_id con onDelete('set null')
     $table->foreign('user_id')
           ->references('id')->on('users')
           ->onDelete('set null');
 
-          // 4) Asegurarte de que category_id existe y es nullable
-    $table->unsignedBigInteger('category_id')->nullable()->change();
-    // 5) Crear la FK con SET NULL
+    // 5) Volver a crear la foreign key de category_id con onDelete('set null')
     $table->foreign('category_id')
           ->references('id')->on('categories')
           ->onDelete('set null');
@@ -36,8 +38,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('anuncios', function (Blueprint $table) {
-            //
-        });
+        Schema::table('announcements', function (Blueprint $table) {
+    // Reversión si quieres hacerlo bien
+});
     }
 };
