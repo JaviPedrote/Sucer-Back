@@ -19,23 +19,22 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
 
 
-        Role::create([
-            'name' => Role::ADMIN,
-            'slug' => 'admin'
-        ]);
-        Role::create([
-            'name' => Role::TUTOR,
-            'slug' => 'tutor'
-        ]);
-        Role::create([
-            'name' => Role::USER,
-            'slug' => 'user'
-        ]);
+        // Role::create([
+        //     'name' => Role::ADMIN,
+        //     'slug' => 'admin'
+        // ]);
+        // Role::create([
+        //     'name' => Role::TUTOR,
+        //     'slug' => 'tutor'
+        // ]);
+        // Role::create([
+        //     'name' => Role::USER,
+        //     'slug' => 'user'
+        // ]);
         Category::factory(4)->create();
 
-        $this->call([
-            RolesTableSeeder::class,
-        ]);
+        $this->call(RolesTableSeeder::class);
+
         $this->call([UserSeeder::class]);
         // $this->call([AnnouncementSeeder::class]);
     }
