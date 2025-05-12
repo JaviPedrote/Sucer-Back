@@ -31,7 +31,7 @@ class DatabaseSeeder extends Seeder
         //     'name' => Role::USER,
         //     'slug' => 'user'
         // ]);
-        Category::factory(4)->create();
+        // Category::factory(4)->create();
 
         $this->call(RolesTableSeeder::class);
 
