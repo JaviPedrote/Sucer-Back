@@ -4,6 +4,7 @@ use App\Http\Middleware\AnnouncementApiMiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Http\Middleware\HandleCors;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -16,13 +17,16 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
 
-        /* ───── ALIAS ───── */
-        $middleware->alias([
-            'announcement.api' => AnnouncementApiMiddleware::class,
-        ]);
+    /* ───── ALIAS ───── */
+    $middleware->alias([
+        'announcement.api' => AnnouncementApiMiddleware::class,
+    ]);
 
-        /* ───── GLOBAL ───── */
-    })
+    /* ───── GLOBAL ───── */
+    $middleware->append([
+        HandleCors::class,
+    ]);
+})
     ->withExceptions(function (Exceptions $exceptions) {
         //
     })->create();
