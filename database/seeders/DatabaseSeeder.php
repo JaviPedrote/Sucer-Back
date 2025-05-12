@@ -6,6 +6,7 @@ use App\Models\Announcement;
 use App\Models\Category;
 use App\Models\Role;
 use App\Models\User;
+use Database\Seeders\OAuthClientsSeeder;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -36,6 +37,8 @@ class DatabaseSeeder extends Seeder
         $this->call(RolesTableSeeder::class);
 
         $this->call([UserSeeder::class]);
+
+        $this->call(OAuthClientsSeeder::class);
         // $this->call([AnnouncementSeeder::class]);
     }
 }
