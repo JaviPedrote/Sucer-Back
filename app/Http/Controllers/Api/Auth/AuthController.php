@@ -68,7 +68,7 @@ class AuthController extends Controller
         $data = $request->validate([
             'name'                  => 'required|string|max:255',
             'email'                 => 'required|email|unique:users,email',
-            'password'              => 'required|min:8|confirmed',
+            'password'              => 'required|min:8|',
             'role_id'               => 'required|exists:roles,id',
             'tutor_id'              => ['nullable','exists:users,id'],
         ]);
@@ -78,7 +78,7 @@ class AuthController extends Controller
             $admin = User::where('role_id', 1)->first();
             $data['tutor_id'] = $admin ? $admin->id : null;
         } else {
-            
+
             $data['tutor_id'] = null;
         }
 
