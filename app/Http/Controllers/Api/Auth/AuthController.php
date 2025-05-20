@@ -62,18 +62,18 @@ class AuthController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
 
-    public function register(Request $request)
+   public function register(Request $request)
     {
-        // 1) Validar datos de entrada
+        // 1) Validar datos de entrada (sin slug)
         $data = $request->validate([
             'name'                  => 'required|string|max:255',
             'email'                 => 'required|email|unique:users,email',
-            'password'              => 'required|min:8|',
+            'password'              => 'required|string|min:8|confirmed',
             'role_id'               => 'required|exists:roles,id',
             'tutor_id'              => ['nullable','exists:users,id'],
         ]);
 
-        // 2) Asignar tutor automáticamente si es alumno (role_id = 2)
+
         if ($data['role_id'] == 2) {
             $admin = User::where('role_id', 1)->first();
             $data['tutor_id'] = $admin ? $admin->id : null;
@@ -82,14 +82,29 @@ class AuthController extends Controller
             $data['tutor_id'] = null;
         }
 
+       
+        $baseSlug  = Str::slug($data['name']);
+        $slug      = $baseSlug;
+        $counter   = 1;
+        while (User::where('slug', $slug)->exists()) {
+            $slug = $baseSlug . '-' . $counter++;
+        }
+        $data['slug'] = $slug;
 
+        // 4) Hashear la contraseña
         $data['password'] = Hash::make($data['password']);
 
+        // 5) Crear el usuario
+        $user = User::create([
+            'name'     => $data['name'],
+            'email'    => $data['email'],
+            'password' => $data['password'],
+            'role_id'  => $data['role_id'],
+            'tutor_id' => $data['tutor_id'],
+            'slug'     => $data['slug'],
+        ]);
 
-        //    El slug se genera automáticamente en el modelo User gracias a Sluggable
-        $user = User::create($data);
 
-        // 5) Responder
         return response()->json([
             'message' => 'Usuario registrado con éxito',
             'user'    => $user,

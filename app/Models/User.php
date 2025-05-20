@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Traits\ApiTrait;
-use Cviebrock\EloquentSluggable\Sluggable;
+// use Cviebrock\EloquentSluggable\Sluggable;
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -16,7 +16,7 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, ApiTrait;
 
-    use SoftDeletes, Sluggable;
+    use SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -58,15 +58,15 @@ class User extends Authenticatable
      /**
      * Configuración de Sluggable para generar el slug
      */
-    public function sluggable(): array
-    {
-        return [
-            'slug' => [
-                'source'   => 'name',
-                'onUpdate' => true,
-            ]
-        ];
-    }
+    // public function sluggable(): array
+    // {
+    //     return [
+    //         'slug' => [
+    //             'source'   => 'name',
+    //             'onUpdate' => true,
+    //         ]
+    //     ];
+    // }
 
     // Relacion muchos a uno
     public function role()
