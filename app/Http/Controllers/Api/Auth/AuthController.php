@@ -64,37 +64,37 @@ class AuthController extends Controller
 
    public function register(Request $request)
     {
-        // 1) Validar datos de entrada (sin slug)
+        // 1) Validación (sin slug)
         $data = $request->validate([
-            'name'                  => 'required|string|max:255',
-            'email'                 => 'required|email|unique:users,email',
-            'password'              => 'required|min:8|',
-            'role_id'               => 'required|exists:roles,id',
-            'tutor_id'              => ['nullable','exists:users,id'],
+            'name'         => 'required|string|max:255',
+            'email'        => 'required|email|unique:users,email',
+            'password'     => 'required|string|min:8|confirmed',
+            'role_id'      => 'required|exists:roles,id',
+            'tutor_id'     => ['nullable','exists:users,id'],
         ]);
 
-
+        // 2) Asignar tutor si es alumno
         if ($data['role_id'] == 2) {
             $admin = User::where('role_id', 1)->first();
             $data['tutor_id'] = $admin ? $admin->id : null;
         } else {
-
             $data['tutor_id'] = null;
         }
 
+        // 3) Generar slug único contando también trashed
+        $baseSlug = Str::slug($data['name']);
+        $slug     = $baseSlug;
+        $counter  = 1;
 
-        $baseSlug  = Str::slug($data['name']);
-        $slug      = $baseSlug;
-        $counter   = 1;
-        while (User::where('slug', $slug)->exists()) {
+        while (User::withTrashed()->where('slug', $slug)->exists()) {
             $slug = $baseSlug . '-' . $counter++;
         }
         $data['slug'] = $slug;
 
-        // 4) Hashear la contraseña
+        // 4) Hashear contraseña
         $data['password'] = Hash::make($data['password']);
 
-        // 5) Crear el usuario
+        // 5) Crear usuario
         $user = User::create([
             'name'     => $data['name'],
             'email'    => $data['email'],
@@ -103,7 +103,6 @@ class AuthController extends Controller
             'tutor_id' => $data['tutor_id'],
             'slug'     => $data['slug'],
         ]);
-
 
         return response()->json([
             'message' => 'Usuario registrado con éxito',
