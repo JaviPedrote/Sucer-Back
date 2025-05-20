@@ -22,6 +22,7 @@ class AnnouncementResource extends JsonResource
             'content' => $this->content,
             'user' => UserResource::make($this->whenLoaded('user')),
             'category' => CategoryResource::make($this->whenLoaded('category')),
+            'created_at' => $this->created_at,
         ];
     }
 }
