@@ -64,28 +64,32 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-
+        // 1) Validar datos de entrada
         $data = $request->validate([
             'name'                  => 'required|string|max:255',
             'email'                 => 'required|email|unique:users,email',
-            'password'              => 'required|min:8',
+            'password'              => 'required|min:8|confirmed',
             'role_id'               => 'required|exists:roles,id',
-            'tutor_id'              => ['nullable', 'exists:users,id'],
+            'tutor_id'              => ['nullable','exists:users,id'],
         ]);
 
-        // Asignar tutor automáticamente si es alumno (role_id = 2)
+        // 2) Asignar tutor automáticamente si es alumno (role_id = 2)
         if ($data['role_id'] == 2) {
             $admin = User::where('role_id', 1)->first();
             $data['tutor_id'] = $admin ? $admin->id : null;
         } else {
-            // Si no es alumno, no puede tener tutor
+            
             $data['tutor_id'] = null;
         }
 
+
         $data['password'] = Hash::make($data['password']);
-        
+
+
+        //    El slug se genera automáticamente en el modelo User gracias a Sluggable
         $user = User::create($data);
 
+        // 5) Responder
         return response()->json([
             'message' => 'Usuario registrado con éxito',
             'user'    => $user,
