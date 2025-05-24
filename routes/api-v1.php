@@ -18,8 +18,6 @@ Route::get('/user', function (Request $request) {
 
 Route::post('login', [AuthController::class, 'login']);
 Route::post('register', [AuthController::class, 'register'])->name('api.v1.register');
-// Route::post('/forgot-password', ForgotPasswordController::class)->name('password.email');
-// Route::post('/reset-password', ResetPasswordController::class)->name('password.reset');
 
 
 

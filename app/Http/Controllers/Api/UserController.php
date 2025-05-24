@@ -58,7 +58,7 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
-            'password' => 'nullable|string|min:8|confirmed',
+            'password' => 'nullable|string|min:8',
         ]);
 
         // Update the user
@@ -67,6 +67,7 @@ class UserController extends Controller
             'email' => $request->email,
             'role_id' => $request->role_id,
             'tutor_id' => $request->tutor_id,
+            'password' => $request->password ? bcrypt($request->password) : $user->password,
         ]);
 
 
