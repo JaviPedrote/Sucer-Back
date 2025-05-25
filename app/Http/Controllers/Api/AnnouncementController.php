@@ -21,12 +21,14 @@ public function index()
     $query = Announcement::with('author','category');
     
     if ($me->role_id === 3) {
-        // Alumno: sólo su tutor + admin
-        $ids = array_filter([$me->tutor_id, 1]);
+        // Alumno: ve anuncios de su tutor asignado y de todos los administradores
+        $adminUsers = Role::where('id', 1)->first()->users()->pluck('id')->toArray();
+        $ids = array_filter(array_merge([$me->tutor_id], $adminUsers));
         $query->whereIn('user_id', $ids);
     } elseif ($me->role_id === 2) {
-        // Tutor: sólo él + admin
-        $ids = [$me->id, 1];
+        // Tutor: ve sus propios anuncios y todos los anuncios de usuarios con rol 1 (administradores)
+        $adminUsers = Role::where('id', 1)->first()->users()->pluck('id')->toArray();
+        $ids = array_merge([$me->id], $adminUsers);
         $query->whereIn('user_id', $ids);
     }
     // Si es admin (role_id === 1), no añadimos WHERE y cargamos TODOS
