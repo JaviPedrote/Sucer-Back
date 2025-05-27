@@ -38,7 +38,8 @@ class DatabaseSeeder extends Seeder
 
         $this->call([UserSeeder::class]);
 
-        $this->call(OAuthClientsSeeder::class);
+        // Comentado temporalmente para evitar errores con las tablas de OAuth
+        // $this->call(OAuthClientsSeeder::class);
         // $this->call([AnnouncementSeeder::class]);
     }
 }

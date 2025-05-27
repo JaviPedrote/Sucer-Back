@@ -17,9 +17,9 @@ class RolesTableSeeder extends Seeder
 
         // 2) Definimos los roles con nombres cortos
         $roles = [
-            ['id'   => Role::ADMIN, 'name' => 'Admin',   'slug' => 'admin'],
-            ['id'   => Role::TUTOR, 'name' => 'Tutor',   'slug' => 'tutor'],
-            ['id'   => Role::USER,  'name' => 'Usuario', 'slug' => 'user'],
+            ['id'   => Role::ADMIN, 'name' => Role::ADMIN, 'slug' => 'admin'],
+            ['id'   => Role::TUTOR, 'name' => Role::TUTOR, 'slug' => 'tutor'],
+            ['id'   => Role::USER,  'name' => Role::USER,  'slug' => 'user'],
         ];
 
         // 3) Creamos los roles
