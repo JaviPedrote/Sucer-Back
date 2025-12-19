@@ -39,6 +39,9 @@ class DatabaseSeeder extends Seeder
         $this->call([UserSeeder::class]);
 
         $this->call(OAuthClientsSeeder::class);
-        // $this->call([AnnouncementSeeder::class]);
+
+        $this->call(CategorySeeder::class);
+
+        $this->call(AnnouncementSeeder::class);
     }
 }
